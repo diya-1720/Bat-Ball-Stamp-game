@@ -4,7 +4,7 @@ A fun, simple web-based game inspired by the classic Rock-Paper-Scissors, but wi
 
 ## 🏏 How to Play
 
-1. Open `cricket.html` in your web browser.
+1. Open `index.html` in your web browser.
 2. You will see three buttons: **Bat**, **Ball**, and **Stump**.
 3. Click on your choice to play against the computer.
 4. An alert box will appear showing your choice, the computer's random choice, and the final result of the match!
@@ -26,6 +26,6 @@ The rules are simple and follow a circular logic just like Rock-Paper-Scissors:
 
 ## 🚀 Getting Started
 
-Simply clone or download this repository, and double-click on `cricket.html` to open it in any modern web browser. No installation or server required!
+Simply clone or download this repository, and double-click on `index.html` to open it in any modern web browser. No installation or server required!
 
 Enjoy playing!
