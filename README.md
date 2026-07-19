@@ -21,7 +21,7 @@ The rules are simple and follow a circular logic just like Rock-Paper-Scissors:
 ## 🛠️ Technologies Used
 
 - **HTML5**: For the basic structure and buttons.
-- **CSS3**: For styling (via `cricket.css`).
+- **CSS3**: For styling (via `style.css`).
 - **JavaScript**: For the game logic, generating the computer's random choice, and determining the winner.
 
 ## 🚀 Getting Started
