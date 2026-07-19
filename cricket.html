@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bat Ball Stump</title>
+    <link rel="stylesheet" href="cricket.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Bat Ball Stump</h1>
+        
+        <div class="choices">
+            <button id="btn-bat" class="choice-button" data-choice="Bat">
+                <img src="bat.png" alt="Bat" class="choice-image">
+            </button>
+            <button id="btn-ball" class="choice-button" data-choice="Ball">
+                <img src="ball.jpg" alt="Ball" class="choice-image">
+            </button>
+            <button id="btn-stump" class="choice-button" data-choice="Stump">
+                <img src="stump.jpg" alt="Stump" class="choice-image">
+            </button>
+        </div>
+
+        <div class="results-board">
+            <h3 id="user-move"></h3>
+            <h3 id="computer-move"></h3>
+            <h3 id="result" class="highlight-result"></h3>
+        </div>
+        
+        <div class="score-board">
+            <h3 id="score"></h3>
+        </div>
+
+        <button class="reset-btn" onclick="resetGame()">Reset Score</button>
+    </div>
+
+    <script>
+        let score;
+        
+        function initScore() {
+            let scorestr = localStorage.getItem('Score');
+            if (scorestr) {
+                score = JSON.parse(scorestr);
+            } else {
+                score = { win: 0, lose: 0, tie: 0 };
+            }
+            
+            score.displayscore = function() {
+                return `Wins: ${score.win} | Losses: ${score.lose} | Ties: ${score.tie}`;
+            };
+            
+            updateScoreDisplay();
+        }
+
+        function resetGame() {
+            localStorage.clear();
+            score = { win: 0, lose: 0, tie: 0 };
+            score.displayscore = function() {
+                return `Wins: ${score.win} | Losses: ${score.lose} | Ties: ${score.tie}`;
+            };
+            document.querySelector('#user-move').innerText = '';
+            document.querySelector('#computer-move').innerText = '';
+            document.querySelector('#result').innerText = '';
+            updateScoreDisplay();
+        }
+
+        function generateComputerChoice() {
+            let randomNumber = Math.random() * 3; 
+            if(randomNumber <= 1) {
+                return 'Bat';
+            } else if (randomNumber <= 2) {
+                return 'Ball';
+            } else {
+                return 'Stump';
+            }
+        }
+
+        function getResult(userChoice, computerMove) {
+            if (userChoice === 'Bat') {
+                if (computerMove === 'Bat') { score.tie++; return 'It\'s a tie!'; }
+                else if (computerMove === 'Ball') { score.win++; return 'You won!'; }
+                else { score.lose++; return 'Computer won!'; }
+            } else if (userChoice === 'Ball') {
+                if (computerMove === 'Bat') { score.lose++; return 'Computer won!'; } // Bat beats Ball
+                else if (computerMove === 'Ball') { score.tie++; return 'It\'s a tie!'; }
+                else { score.win++; return 'You won!'; } // Ball beats Stump
+            } else { // Stump
+                if (computerMove === 'Bat') { score.win++; return 'You won!'; } // Stump beats Bat (Out)
+                else if (computerMove === 'Ball') { score.lose++; return 'Computer won!'; } // Ball beats Stump (Bowled)
+                else { score.tie++; return 'It\'s a tie!'; }
+            }
+        }
+
+        function updateScoreDisplay() {
+            localStorage.setItem('Score', JSON.stringify(score));
+            document.querySelector('#score').innerText = score.displayscore();
+        }
+
+        function showResult(userChoice, computerChoice, result) {
+            document.querySelector('#user-move').innerText = `You chose ${userChoice}`;
+            document.querySelector('#computer-move').innerText = `Computer chose ${computerChoice}`;
+            document.querySelector('#result').innerText = result;
+            
+            let resultEl = document.querySelector('#result');
+            resultEl.className = 'highlight-result'; // reset class
+            if(result === 'You won!') resultEl.classList.add('win-text');
+            if(result === 'Computer won!') resultEl.classList.add('lose-text');
+            if(result === 'It\'s a tie!') resultEl.classList.add('tie-text');
+            
+            updateScoreDisplay();
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.choice-button').forEach(button => {
+            button.addEventListener('click', () => {
+                let userChoice = button.getAttribute('data-choice');
+                let computerChoice = generateComputerChoice();
+                let resultMsg = getResult(userChoice, computerChoice);
+                showResult(userChoice, computerChoice, resultMsg);
+            });
+        });
+
+        // Initialize on load
+        initScore();
+    </script>
+</body>
+</html>
